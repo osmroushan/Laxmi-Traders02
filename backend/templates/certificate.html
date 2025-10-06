@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Certificate</title>
+  <style>
+    body{ font-family: Arial, sans-serif; padding:30px; }
+    .card{ border: 10px solid #222; padding:30px; width: 800px; margin: 0 auto; }
+    .header{ text-align:center; }
+    .logo{ float:right; max-width:100px; }
+    .meta{ margin-top:20px; }
+    .photo{ position:absolute; right:40px; top:120px; width:120px; height:140px; border:1px solid #333; }
+    .sign{ width:200px; height:60px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <h1>Government-Like Certificate</h1>
+      <div>Laxmi Traders Application Certificate</div>
+    </div>
+    <hr/>
+    <div style="position:relative; min-height:220px;">
+      <div>
+        <p><strong>Applicant Name:</strong> %%FULLNAME%%</p>
+        <p><strong>Father/Husband:</strong> %%FATHER%%</p>
+        <p><strong>Post Applied:</strong> %%POST%%</p>
+        <p><strong>Application ID:</strong> %%ID%%</p>
+        <p><strong>Date:</strong> %%DATE%%</p>
+      </div>
+      <div class="photo">
+        %%PROFILE%%
+        <img src="%%PROFILE%%" style="width:100%;height:100%;object-fit:cover;"/>
+      </div>
+    </div>
+    <hr/>
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <p>Seal / Stamp</p>
+      </div>
+      <div style="text-align:center;">
+        <div style="margin-bottom:10px;">Authorized Signatory</div>
+        <div><img src="%%SIGN%%" class="sign"/></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+const mongoose = require('mongoose');
+const SubmissionSchema = new mongoose.Schema({
+  fullname: String,
+  fathername: String,
+  dob: String,
+  gender: String,
+  marital_status: String,
+  category: String,
+  mobile: String,
+  whatsapp: String,
+  email: String,
+  present_address1: String,
+  present_address2: String,
+  present_state: String,
+  present_district: String,
+  present_block: String,
+  present_pincode: String,
+  permanent_address1: String,
+  permanent_address2: String,
+  permanent_state: String,
+  permanent_district: String,
+  permanent_block: String,
+  permanent_pincode: String,
+  post: String,
+  education: Object,
+  profile_path: String,
+  signature_path: String,
+  pdf_path: String,
+  createdAt: { type: Date, default: Date.now }
+});
+module.exports = mongoose.model('Submission', SubmissionSchema);
