@@ -1,23 +1,27 @@
-require('dotenv').config();
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const path = require('path');
-const submissions = require('./routes/submissions');
+import express from "express";
+import cors from "cors";
+import mongoose from "mongoose";
+
 const app = express();
-app.use(cors());
+
+// ✅ CORS setup for Vercel frontend
+app.use(cors({
+  origin: "https://laxmi-traders02-7jz5.vercel.app", // apna Vercel URL yahan
+  methods: ["GET", "POST"],
+  credentials: true,
+}));
+
 app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname,'uploads')));
-app.use('/api/submissions', submissions);
-const PORT = process.env.PORT || 4000;
-if (process.env.MONGO_URI) {
-  mongoose.connect(process.env.MONGO_URI).then(()=>{
-    console.log('MongoDB connected');
-    app.listen(PORT, ()=> console.log('Server running on', PORT));
-  }).catch(err=>{
-    console.error('MongoDB error', err);
-    app.listen(PORT, ()=> console.log('Server running (no DB) on', PORT));
-  });
-} else {
-  app.listen(PORT, ()=> console.log('Server running on', PORT));
-}
+app.use(express.urlencoded({ extended: true }));
+
+// ✅ MongoDB connection
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch((err) => console.log("MongoDB error", err));
+
+// ✅ Routes
+import formRouter from "./routes/formRoutes.js";
+app.use("/api/form", formRouter);
+
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
