@@ -1,46 +1,80 @@
-import { useState } from 'react'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
-export default function FormPage(){
-  const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
-  async function onSubmit(e){
-    e.preventDefault()
-    setLoading(true)
-    const form = new FormData(e.target)
-    // education as JSON string (simple)
-    const education = {
-      '10th': { year: form.get('10_year'), board: form.get('10_board') },
-      '12th': { year: form.get('12_year'), board: form.get('12_board') }
+import React, { useState } from "react";
+import axios from "axios";
+
+function FormPage() {
+  const [formData, setFormData] = useState({
+    name: "",
+    address: "",
+    date: "",
+    gender: "",
+    status: "",
+    phone: "",
+    email: "",
+    education: "",
+    profile: null,
+    signature: null,
+  });
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (files) {
+      setFormData({ ...formData, [name]: files[0] });
+    } else {
+      setFormData({ ...formData, [name]: value });
     }
-    form.set('education', JSON.stringify(education))
-    try{
-      const res = await axios.post('/api/submissions', form, { headers: {'Content-Type':'multipart/form-data'} })
-      if(res.data && res.data.pdf) {
-        // pass pdf url to success page
-        navigate('/success', { state: { pdf: res.data.pdf } })
-      } else navigate('/success')
-    }catch(err){ console.error(err); alert('Submit error') }
-    setLoading(false)
-  }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+      data.append(key, value);
+    });
+
+    try {
+      const res = await axios.post(
+        "https://laxmi-traders02.onrender.com/api/form", // 🔥 Replace with your backend Render URL
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      alert("Form submitted successfully!");
+      console.log(res.data);
+    } catch (error) {
+      console.error(error);
+      alert("Submit error");
+    }
+  };
+
   return (
-    <div className="container">
-      <h2>Application Form</h2>
-      <form onSubmit={onSubmit} encType="multipart/form-data">
-        <div className="row"><input name="fullname" placeholder="Full Name" required/></div>
-        <div className="row"><input name="fathername" placeholder="Father/Husband" required/></div>
-        <div className="row"><input type="date" name="dob" required/></div>
-        <div className="row">
-          <select name="gender" required><option value="">Gender</option><option>Male</option><option>Female</option></select>
-          <select name="marital_status" required><option value="">Marital Status</option><option>Single</option><option>Married</option></select>
-        </div>
-        <div className="row"><input name="mobile" placeholder="Mobile" required/></div>
-        <div className="row"><input name="email" type="email" placeholder="Email" required/></div>
-        <div className="row"><input name="post" placeholder="Post Applied" required/></div>
-        <div className="row"><label>Profile <input type="file" name="profile" accept="image/*"/></label></div>
-        <div className="row"><label>Signature <input type="file" name="signature" accept="image/*"/></label></div>
-        <div><button className="btn" type="submit" disabled={loading}>{loading ? 'Submitting...' : 'Submit'}</button></div>
+    <div className="form-container">
+      <h1>Application Form</h1>
+      <form onSubmit={handleSubmit}>
+        <input name="name" placeholder="Name" onChange={handleChange} />
+        <input name="address" placeholder="Address" onChange={handleChange} />
+        <input type="date" name="date" onChange={handleChange} />
+        <select name="gender" onChange={handleChange}>
+          <option>Male</option>
+          <option>Female</option>
+        </select>
+        <select name="status" onChange={handleChange}>
+          <option>Single</option>
+          <option>Married</option>
+        </select>
+        <input name="phone" placeholder="Phone" onChange={handleChange} />
+        <input name="email" placeholder="Email" onChange={handleChange} />
+        <input name="education" placeholder="Education" onChange={handleChange} />
+        <label>Profile</label>
+        <input type="file" name="profile" onChange={handleChange} />
+        <label>Signature</label>
+        <input type="file" name="signature" onChange={handleChange} />
+        <button type="submit">Submit</button>
       </form>
     </div>
-  )
+  );
 }
+
+export default FormPage;
