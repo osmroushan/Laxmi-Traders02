@@ -1,27 +1,17 @@
 import express from "express";
 import cors from "cors";
-import mongoose from "mongoose";
+import formRoutes from "./routes/formRoutes.js";
 
 const app = express();
-
-// ✅ CORS setup for Vercel frontend
-app.use(cors({
-  origin: "https://laxmi-traders02-7jz5.vercel.app", // apna Vercel URL yahan
-  methods: ["GET", "POST"],
-  credentials: true,
-}));
-
+app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", express.static("uploads"));
 
-// ✅ MongoDB connection
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB connected"))
-  .catch((err) => console.log("MongoDB error", err));
+app.use("/api/form", formRoutes); // ✅ route prefix
 
-// ✅ Routes
-import formRouter from "./routes/formRoutes.js";
-app.use("/api/form", formRouter);
+app.get("/", (req, res) => {
+  res.send("Backend is running ✅");
+});
 
-const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
